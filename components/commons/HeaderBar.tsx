@@ -1,6 +1,7 @@
 import Link from "next/link";
-import ConnectWalletButton from "./ConnectWalletButton";
+import ConnectWalletDialog from "./ConnectWalletDialog";
 import NetworkSelect from "./NetworkSelect";
+import ConnectedButton from "./ConnectedButton";
 
 const HeaderBar = () => {
   return (
@@ -19,7 +20,8 @@ const HeaderBar = () => {
 
         <div className="flex items-center gap-3">
           <NetworkSelect />
-          <ConnectWalletButton />
+          <ConnectWalletDialog />
+          <ConnectedButton />
         </div>
       </nav>
     </header>

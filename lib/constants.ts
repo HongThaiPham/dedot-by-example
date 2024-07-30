@@ -17,3 +17,5 @@ export const FEATURES: {
     href: "/features/interact-contract",
   },
 ];
+
+export const APP_NAME = "dedot by Example";

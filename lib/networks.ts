@@ -5,6 +5,9 @@ export interface INetwork {
   name: string;
   endpoint: string;
   decimals: number;
+  prefix: number;
+  symbol: string;
+  subscanUrl: string;
 }
 
 export const POLKADOT: INetwork = {
@@ -12,6 +15,9 @@ export const POLKADOT: INetwork = {
   name: "polkadot",
   endpoint: "wss://rpc.polkadot.io",
   decimals: 10,
+  prefix: 0,
+  symbol: "DOT",
+  subscanUrl: "https://polkadot.subscan.io",
 };
 
 export const ROCOCO: INetwork = {
@@ -19,6 +25,10 @@ export const ROCOCO: INetwork = {
   name: "rococo",
   endpoint: "wss://rococo-rpc.polkadot.io",
   decimals: 12,
+  prefix: 42,
+  symbol: "ROC",
+
+  subscanUrl: "https://rococo.subscan.io",
 };
 
 export const ROCOCO_CONTRACT: INetwork = {
@@ -26,6 +36,10 @@ export const ROCOCO_CONTRACT: INetwork = {
   name: "rococo-contracts",
   endpoint: "wss://rococo-contracts-rpc.polkadot.io",
   decimals: 12,
+  prefix: 42,
+  symbol: "ROC",
+
+  subscanUrl: "https://rococo.subscan.io",
 };
 
 export const ROCOCO_ASSETHUB: INetwork = {
@@ -33,24 +47,40 @@ export const ROCOCO_ASSETHUB: INetwork = {
   name: "rococo-assethub",
   endpoint: "wss://rococo-asset-hub-rpc.polkadot.io",
   decimals: 12,
+  prefix: 42,
+  symbol: "ROC",
+
+  subscanUrl: "https://rococo.subscan.io",
 };
 
 export const WESTEND: INetwork = {
   name: "westend",
   endpoint: "wss://westend-rpc.dwellir.com",
   decimals: 12,
+  prefix: 42,
+  symbol: "WND",
+
+  subscanUrl: "https://westend.subscan.io",
 };
 
 export const WESTEND_ASSETHUB: INetwork = {
   name: "westend-assethub",
   endpoint: "wss://westend-asset-hub-rpc.polkadot.io",
   decimals: 12,
+  prefix: 42,
+  symbol: "WND",
+
+  subscanUrl: "https://westend.subscan.io",
 };
 
 export const WESTEND_PEOPLE: INetwork = {
   name: "westend-people",
   endpoint: "wss://westend-people-rpc.polkadot.io",
   decimals: 12,
+  prefix: 42,
+  symbol: "WND",
+
+  subscanUrl: "https://westend.subscan.io",
 };
 
 export const SUPPORTED_NETWORKS = [
