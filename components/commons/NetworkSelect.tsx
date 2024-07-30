@@ -1,6 +1,6 @@
 "use client";
 
-import { INetwork, SUPPORTED_NETWORKS } from "@/lib/networks";
+import { SUPPORTED_NETWORKS } from "@/lib/networks";
 import {
   Select,
   SelectContent,
@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useDedotProvider } from "../DedotProvider";
 
 const NetworkSelect = () => {
-  const { setNetwork } = useDedotProvider();
+  const { setNetwork, network } = useDedotProvider();
   const handleNetworkChange = (networkName: string) => {
     const network = SUPPORTED_NETWORKS.find((n) => n.name === networkName);
     if (network) {
@@ -20,7 +20,7 @@ const NetworkSelect = () => {
     }
   };
   return (
-    <Select onValueChange={handleNetworkChange}>
+    <Select onValueChange={handleNetworkChange} defaultValue={network?.name}>
       <SelectTrigger className="w-[230px] outline-none">
         <SelectValue placeholder="Network" />
       </SelectTrigger>

@@ -15,7 +15,9 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <DedotProvider>
         <HeaderBar />
-        {children}
+        <main className="flex min-h-screen flex-col px-4 sm:px-6 lg:px-8 py-5 max-w-7xl mx-auto">
+          {children}
+        </main>
       </DedotProvider>
     </QueryClientProvider>
   );
