@@ -10,6 +10,16 @@ export interface INetwork {
   subscanUrl: string;
 }
 
+export const LOCAL_NODE: INetwork = {
+  logo: "/assets/chains/logo/polkadot-circle.svg",
+  name: "localnode",
+  endpoint: "ws://127.0.0.1:9944",
+  decimals: 12,
+  prefix: 42,
+  symbol: "ROC",
+  subscanUrl: "https://rococo.subscan.io",
+};
+
 export const POLKADOT: INetwork = {
   logo: "/assets/chains/logo/polkadot-circle.svg",
   name: "polkadot",
@@ -84,6 +94,7 @@ export const WESTEND_PEOPLE: INetwork = {
 };
 
 export const SUPPORTED_NETWORKS = [
+  LOCAL_NODE,
   POLKADOT,
   ROCOCO,
   ROCOCO_CONTRACT,

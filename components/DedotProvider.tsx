@@ -10,10 +10,11 @@ import {
 } from "react";
 import { DedotClient, WsProvider } from "dedot";
 import { toast } from "sonner";
-import { INetwork, ROCOCO_CONTRACT } from "@/lib/networks";
+import { INetwork, LOCAL_NODE, ROCOCO_CONTRACT } from "@/lib/networks";
 import {
   InjectedWindow,
   InjectedWindowProvider,
+  Injected,
 } from "@polkadot/extension-inject/types";
 import { APP_NAME } from "@/lib/constants";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -25,8 +26,9 @@ interface DedotContextState {
   network?: INetwork;
   setNetwork: (network: INetwork) => void;
   isConnected?: boolean;
-  activeProvider?: InjectedWindowProvider;
+  activeProvider?: BaseWallet;
   connect?: (w: BaseWallet) => void;
+  disconnect?: () => void;
   connectedAccounts: Account[];
 }
 
@@ -42,14 +44,14 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
     ""
   );
   const { wallets } = useWallets();
-  const [network, setNetwork] = useState<INetwork>(ROCOCO_CONTRACT);
+  const [network, setNetwork] = useLocalStorage<INetwork>(
+    "NETWORK",
+    LOCAL_NODE || ROCOCO_CONTRACT
+  );
 
   const [dedotClient, setDedotClient] = useState<DedotClient | undefined>(
     undefined
   );
-  const [activeProvider, setActiveProvider] = useState<
-    InjectedWindowProvider | undefined
-  >(undefined);
 
   const [connectedAccounts, setConnectedAccounts] = useState<Account[]>([]);
 
@@ -60,7 +62,10 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
         toast.promise(
           () => {
             const wsProvider = new WsProvider(network.endpoint);
-            return DedotClient.new(wsProvider);
+            return DedotClient.new({
+              provider: wsProvider,
+              cacheMetadata: true,
+            });
           },
           {
             loading: `Connecting dedot to ${network.name.toUpperCase()} ...`,
@@ -73,7 +78,7 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
         );
       }
     },
-    [network]
+    [dedotClient, network]
   );
 
   const connect = async (w: BaseWallet) => {
@@ -88,20 +93,32 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
     };
   };
 
-  const handleNetworkChange = useCallback(async (network: INetwork) => {
-    await dedotClient?.disconnect();
-    setNetwork(network);
-    await InitClient(true);
-    return () => {
-      dedotClient?.disconnect;
-    };
-  }, []);
+  const disconnect = async () => {
+    const w = wallets?.find((w) => w.metadata.id === selectedProvider);
+    if (w) {
+      await w.disconnect();
+      setSelectedProvider("");
+      setConnectedAccounts([]);
+    }
+  };
+
+  const handleNetworkChange = useCallback(
+    async (network: INetwork) => {
+      setNetwork(network);
+      if (dedotClient) await dedotClient?.disconnect();
+
+      await InitClient(true);
+      return () => {
+        dedotClient?.disconnect;
+      };
+    },
+    [InitClient, dedotClient, setNetwork]
+  );
 
   const reconnect = async () => {
     if (selectedProvider != "") {
-      const wallet = wallets?.find((w) => w.metadata.id === selectedProvider);
-      if (!wallet) return;
-      await connect(wallet);
+      if (!activeProvider) return;
+      await connect(activeProvider);
     }
   };
 
@@ -109,8 +126,12 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return connectedAccounts.length > 0;
   }, [connectedAccounts]);
 
+  const activeProvider = useMemo(() => {
+    return wallets?.find((w) => w.metadata.id === selectedProvider);
+  }, [selectedProvider, wallets]);
+
   useEffect(() => {
-    InitClient();
+    InitClient(true);
     reconnect();
     return () => {
       dedotClient?.disconnect;
@@ -125,6 +146,7 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
         network,
         isConnected,
         connect,
+        disconnect,
         activeProvider,
         connectedAccounts,
       }}

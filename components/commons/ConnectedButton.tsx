@@ -14,10 +14,12 @@ import DisplayAddress from "./DisplayAddress";
 import { useDedotProvider } from "../DedotProvider";
 
 const ConnectedButton = () => {
-  const { connectedAccounts } = useDedotProvider();
+  const { connectedAccounts, disconnect, isConnected } = useDedotProvider();
+
+  if (!isConnected) return null;
 
   const handleDisconnectWallet = () => {
-    // if (disconnect) disconnect();
+    if (disconnect) disconnect();
   };
 
   const handleCopyAddress = () => {
