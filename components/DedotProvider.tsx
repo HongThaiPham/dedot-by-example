@@ -18,6 +18,7 @@ import {
 import { APP_NAME } from "@/lib/constants";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Account, BaseWallet } from "@polkadot-onboard/core";
+import { useWallets } from "@polkadot-onboard/react";
 
 interface DedotContextState {
   dedotClient: DedotClient | undefined;
@@ -40,8 +41,9 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
     "PROVIDER",
     ""
   );
+  const { wallets } = useWallets();
   const [network, setNetwork] = useState<INetwork>(ROCOCO_CONTRACT);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+
   const [dedotClient, setDedotClient] = useState<DedotClient | undefined>(
     undefined
   );
@@ -76,6 +78,7 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const connect = async (w: BaseWallet) => {
     await w.connect();
+    setSelectedProvider(w.metadata.id);
     const unsub = await w.subscribeAccounts((accounts) => {
       setConnectedAccounts(accounts);
     });
@@ -94,13 +97,25 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
     };
   }, []);
 
+  const reconnect = async () => {
+    if (selectedProvider != "") {
+      const wallet = wallets?.find((w) => w.metadata.id === selectedProvider);
+      if (!wallet) return;
+      await connect(wallet);
+    }
+  };
+
+  const isConnected = useMemo(() => {
+    return connectedAccounts.length > 0;
+  }, [connectedAccounts]);
+
   useEffect(() => {
     InitClient();
-
+    reconnect();
     return () => {
       dedotClient?.disconnect;
     };
-  }, []);
+  }, [wallets]);
 
   return (
     <DedotContext.Provider

@@ -10,13 +10,18 @@ import {
 } from "../ui/dialog";
 import { Wallet } from "lucide-react";
 import { useWallets } from "@polkadot-onboard/react";
+import { useState } from "react";
 
 const ConnectWalletDialog = () => {
+  const [open, setOpen] = useState(false);
   const { wallets } = useWallets();
-  const { connect } = useDedotProvider();
+
+  const { connect, isConnected } = useDedotProvider();
+
+  if (isConnected) return null;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Connect Wallet</Button>
       </DialogTrigger>
@@ -29,7 +34,10 @@ const ConnectWalletDialog = () => {
         {wallets &&
           wallets.map((w) => (
             <Button
-              onClick={() => connect?.(w)}
+              onClick={() => {
+                connect?.(w);
+                setOpen(false);
+              }}
               key={w.metadata.id}
               variant={"outline"}
             >

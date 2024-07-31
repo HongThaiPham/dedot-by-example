@@ -11,8 +11,6 @@ import {
 } from "../ui/dropdown-menu";
 import DisplayAddress from "./DisplayAddress";
 
-import { toast } from "sonner";
-import { useWallets } from "@polkadot-onboard/react";
 import { useDedotProvider } from "../DedotProvider";
 
 const ConnectedButton = () => {
