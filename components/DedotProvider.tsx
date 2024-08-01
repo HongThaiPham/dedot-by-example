@@ -10,7 +10,7 @@ import {
 import { DedotClient, WsProvider } from "dedot";
 import { toast } from "sonner";
 import { INetwork, POLKADOT } from "@/lib/networks";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "usehooks-ts";
 
 interface DedotContextState {
   dedotClient: DedotClient | undefined;
@@ -49,7 +49,8 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
         error: `Failed to initialize dedot client`,
       }
     );
-  }, [network.endpoint]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [network?.endpoint]);
 
   useEffect(() => {
     InitClient();

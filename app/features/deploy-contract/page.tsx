@@ -20,38 +20,42 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 
 const DeployContractPage = () => {
-  const fileReader = useRef<FileReader>(new FileReader());
+  const fileReader = useRef<FileReader>();
   const [metadata, setMetadata] = useState<ContractMetadata | null>(null);
   const [constructor, setConstructor] = useState<string | null>(null);
 
-  const { mutateAsync, data } = useDeployContract();
+  const { mutate, data } = useDeployContract();
 
   const contractAddress = useMemo(() => data as string, [data]);
 
   const onSubmit = async () => {
     if (!metadata || !constructor) return;
-    const xx = await mutateAsync({
+    mutate({
       metadata,
       constructor,
     });
-
-    console.log({ xx });
   };
 
-  const handleReadFile = () => {
-    const content = fileReader.current.result;
+  // const handleReadFile = () => {
+  //   const content = fileReader?.current.result;
 
-    try {
-      const metadata: ContractMetadata = JSON.parse(content as string);
-      setMetadata(metadata);
-    } catch (error) {
-      toast.error("Invalid metadata file");
-    }
-  };
+  //   try {
+  //     const metadata: ContractMetadata = JSON.parse(content as string);
+  //     setMetadata(metadata);
+  //   } catch (error) {
+  //     toast.error("Invalid metadata file");
+  //   }
+  // };
 
   const handleFileChange = (file: File) => {
-    fileReader.current.onloadend = handleReadFile;
+    fileReader.current = new FileReader();
+    // fileReader.current.onloadend = handleReadFile;
     fileReader.current.readAsText(file);
+    fileReader.current.onload = (e) => {
+      if (!e.target) return;
+      const content = e.target.result;
+      console.log(content);
+    };
   };
   return (
     <div className="space-y-5">

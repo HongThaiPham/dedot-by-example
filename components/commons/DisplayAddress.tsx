@@ -2,7 +2,8 @@
 import React from "react";
 import { truncateHash } from "@/lib/utils";
 import { encodeAddress } from "dedot/utils";
-import { useDedotProvider } from "../DedotProvider";
+import { INetwork, POLKADOT } from "@/lib/networks";
+import { useLocalStorage } from "usehooks-ts";
 
 type Props = {
   address: string | undefined;
@@ -10,7 +11,7 @@ type Props = {
 };
 
 const DisplayAddress: React.FC<Props> = ({ address, paddingLength = 8 }) => {
-  const { network } = useDedotProvider();
+  const [network] = useLocalStorage<INetwork>("NETWORK", POLKADOT);
   if (!address) return null;
   return (
     <span>

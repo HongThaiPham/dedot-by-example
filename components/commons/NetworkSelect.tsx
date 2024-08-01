@@ -1,6 +1,6 @@
 "use client";
 
-import { INetwork, SUPPORTED_NETWORKS } from "@/lib/networks";
+import { INetwork, POLKADOT, SUPPORTED_NETWORKS } from "@/lib/networks";
 import {
   Select,
   SelectContent,
@@ -9,14 +9,14 @@ import {
   SelectValue,
 } from "../ui/select";
 import Image from "next/image";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "usehooks-ts";
 
 const NetworkSelect = () => {
-  const [network, setNetwork] = useLocalStorage<INetwork>("NETWORK");
+  const [network, setNetwork] = useLocalStorage<INetwork>("NETWORK", POLKADOT);
   const handleNetworkChange = (networkName: string) => {
-    const network = SUPPORTED_NETWORKS.find((n) => n.name === networkName);
-    if (network) {
-      setNetwork(network);
+    const _network = SUPPORTED_NETWORKS.find((n) => n.name === networkName);
+    if (_network) {
+      setNetwork(_network);
     }
   };
   return (

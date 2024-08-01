@@ -1,7 +1,7 @@
 "use client";
 import { Account, BaseWallet } from "@polkadot-onboard/core";
 import { useWallets } from "@polkadot-onboard/react";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "usehooks-ts";
 import React, {
   createContext,
   PropsWithChildren,
