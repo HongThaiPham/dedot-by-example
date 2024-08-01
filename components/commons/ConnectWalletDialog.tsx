@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "../ui/button";
-import { useDedotProvider } from "../DedotProvider";
 import {
   Dialog,
   DialogContent,
@@ -11,12 +10,13 @@ import {
 import { Wallet } from "lucide-react";
 import { useWallets } from "@polkadot-onboard/react";
 import { useState } from "react";
+import { useWalletProvider } from "../WalletProvider";
 
 const ConnectWalletDialog = () => {
   const [open, setOpen] = useState(false);
   const { wallets } = useWallets();
 
-  const { connect, isConnected } = useDedotProvider();
+  const { connect, isConnected } = useWalletProvider();
 
   if (isConnected) return null;
 

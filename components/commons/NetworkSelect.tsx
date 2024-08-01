@@ -1,6 +1,6 @@
 "use client";
 
-import { SUPPORTED_NETWORKS } from "@/lib/networks";
+import { INetwork, SUPPORTED_NETWORKS } from "@/lib/networks";
 import {
   Select,
   SelectContent,
@@ -9,10 +9,10 @@ import {
   SelectValue,
 } from "../ui/select";
 import Image from "next/image";
-import { useDedotProvider } from "../DedotProvider";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const NetworkSelect = () => {
-  const { setNetwork, network } = useDedotProvider();
+  const [network, setNetwork] = useLocalStorage<INetwork>("NETWORK");
   const handleNetworkChange = (networkName: string) => {
     const network = SUPPORTED_NETWORKS.find((n) => n.name === networkName);
     if (network) {

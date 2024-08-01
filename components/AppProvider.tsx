@@ -10,6 +10,7 @@ import { InjectedWalletProvider } from "@polkadot-onboard/injected-wallets";
 
 import { PolkadotWalletsContextProvider } from "@polkadot-onboard/react";
 import { APP_NAME } from "@/lib/constants";
+import WalletProvider from "./WalletProvider";
 
 const queryClient = new QueryClient();
 
@@ -20,12 +21,14 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <PolkadotWalletsContextProvider walletAggregator={walletAggregator}>
-        <DedotProvider>
-          <HeaderBar />
-          <main className="flex min-h-screen flex-col px-4 sm:px-6 lg:px-8 py-5 max-w-7xl mx-auto">
-            {children}
-          </main>
-        </DedotProvider>
+        <WalletProvider>
+          <DedotProvider>
+            <HeaderBar />
+            <main className="flex min-h-screen flex-col px-4 sm:px-6 lg:px-8 py-5 max-w-7xl mx-auto">
+              {children}
+            </main>
+          </DedotProvider>
+        </WalletProvider>
       </PolkadotWalletsContextProvider>
       <Toaster />
     </QueryClientProvider>

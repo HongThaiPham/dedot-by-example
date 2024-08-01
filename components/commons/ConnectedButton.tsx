@@ -11,10 +11,11 @@ import {
 } from "../ui/dropdown-menu";
 import DisplayAddress from "./DisplayAddress";
 
-import { useDedotProvider } from "../DedotProvider";
+import { useWalletProvider } from "../WalletProvider";
+import { toast } from "sonner";
 
 const ConnectedButton = () => {
-  const { connectedAccounts, disconnect, isConnected } = useDedotProvider();
+  const { connectedAccounts, disconnect, isConnected } = useWalletProvider();
 
   if (!isConnected) return null;
 
@@ -23,10 +24,10 @@ const ConnectedButton = () => {
   };
 
   const handleCopyAddress = () => {
-    // if (activeAccount) {
-    //   navigator.clipboard.writeText(activeAccount.address);
-    //   toast.success("Address copied to clipboard");
-    // }
+    if (connectedAccounts && connectedAccounts.length > 0) {
+      navigator.clipboard.writeText(connectedAccounts[0].address);
+      toast.success("Address copied to clipboard");
+    }
   };
   return (
     <DropdownMenu>
