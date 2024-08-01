@@ -36,17 +36,6 @@ const DeployContractPage = () => {
     });
   };
 
-  // const handleReadFile = () => {
-  //   const content = fileReader?.current.result;
-
-  //   try {
-  //     const metadata: ContractMetadata = JSON.parse(content as string);
-  //     setMetadata(metadata);
-  //   } catch (error) {
-  //     toast.error("Invalid metadata file");
-  //   }
-  // };
-
   const handleFileChange = (file: File) => {
     fileReader.current = new FileReader();
     // fileReader.current.onloadend = handleReadFile;
@@ -54,7 +43,14 @@ const DeployContractPage = () => {
     fileReader.current.onload = (e) => {
       if (!e.target) return;
       const content = e.target.result;
-      console.log(content);
+      try {
+        const metadata: ContractMetadata = JSON.parse(content as string);
+        setMetadata(metadata);
+      } catch (error) {
+        console.log(error);
+        toast.error("Invalid metadata file");
+        throw error;
+      }
     };
   };
   return (
