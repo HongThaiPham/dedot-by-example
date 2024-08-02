@@ -7,13 +7,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { DedotClient, WsProvider } from "dedot";
+import { DedotClient, LegacyClient, WsProvider } from "dedot";
 import { toast } from "sonner";
 import { INetwork, POLKADOT } from "@/lib/networks";
 import { useLocalStorage } from "usehooks-ts";
 
 interface DedotContextState {
-  dedotClient: DedotClient | undefined;
+  dedotClient: DedotClient | LegacyClient | undefined;
 }
 
 export const DedotContext = createContext<DedotContextState>({
@@ -23,9 +23,9 @@ export const DedotContext = createContext<DedotContextState>({
 const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [network] = useLocalStorage<INetwork>("NETWORK", POLKADOT);
 
-  const [dedotClient, setDedotClient] = useState<DedotClient | undefined>(
-    undefined
-  );
+  const [dedotClient, setDedotClient] = useState<
+    DedotClient | LegacyClient | undefined
+  >(undefined);
   const InitClient = useCallback(async () => {
     console.log(network);
     if (!network) return;
@@ -35,14 +35,21 @@ const DedotProvider: React.FC<PropsWithChildren> = ({ children }) => {
     toast.promise(
       () => {
         const wsProvider = new WsProvider(network.endpoint);
-        return DedotClient.new({
-          provider: wsProvider,
-          cacheMetadata: true,
-        });
+        if (network.isLegacy) {
+          return LegacyClient.new({
+            provider: wsProvider,
+            cacheMetadata: true,
+          });
+        } else {
+          return DedotClient.new({
+            provider: wsProvider,
+            cacheMetadata: true,
+          });
+        }
       },
       {
         loading: `Connecting dedot to ${network.name.toUpperCase()} ...`,
-        success: (client) => {
+        success: (client: LegacyClient | DedotClient) => {
           setDedotClient(client);
           return `Connected to ${network.name.toUpperCase()}`;
         },

@@ -8,6 +8,7 @@ export interface INetwork {
   prefix: number;
   symbol: string;
   subscanUrl: string;
+  isLegacy?: boolean;
 }
 
 export const LOCAL_NODE: INetwork = {
@@ -93,12 +94,23 @@ export const WESTEND_PEOPLE: INetwork = {
   subscanUrl: "https://westend.subscan.io",
 };
 
+export const ALEPH_ZERO_TESTNET: INetwork = {
+  name: "aleph-zero-testnet",
+  endpoint: "wss://ws.test.azero.dev",
+  decimals: 12,
+  prefix: 42,
+  symbol: "TZERO",
+  subscanUrl: "https://test.subscan.io",
+  isLegacy: true,
+};
+
 export const SUPPORTED_NETWORKS = [
   LOCAL_NODE,
   POLKADOT,
   ROCOCO,
   ROCOCO_CONTRACT,
   ROCOCO_ASSETHUB,
+  ALEPH_ZERO_TESTNET,
   WESTEND,
   WESTEND_ASSETHUB,
   WESTEND_PEOPLE,
